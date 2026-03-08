@@ -1,0 +1,40 @@
+---
+description: Backend conventions for Laravel and Sail
+globs: app/**/*.php, routes/**/*.php, database/**/*.php, config/**/*.php
+alwaysApply: false
+---
+
+# Backend Conventions
+
+## Laravel
+
+- Laravel 12 with PHP 8.4
+- Inertia.js for SPA-style routing (Vue frontend)
+- Laravel Breeze for authentication
+- MySQL database
+
+## Laravel Sail (Local Dev)
+
+All backend commands run **inside Sail** — no local PHP required.
+
+| Command | Purpose |
+|---------|---------|
+| `make up` | Start containers |
+| `make down` | Stop containers |
+| `make shell` | Enter Sail shell (for `php artisan`, `composer`) |
+| `make db-reset` | `migrate:fresh --seed` |
+| `make mysql` | MySQL CLI as root |
+| `make pint` | Laravel Pint (code style) |
+| `make stan` | PHPStan (static analysis, level 4) |
+
+## Pint & PHPStan
+
+- **Pint**: Laravel's PHP code style fixer. Run `make pint` to auto-fix style issues.
+- **PHPStan** (via Larastan): Static analysis. Config in `phpstan.neon` (level 4). Run `make stan` to analyse `app/`.
+
+**Examples:**
+- Artisan: `./vendor/bin/sail artisan <command>` or `make shell` then `php artisan`
+- Composer: `./vendor/bin/sail composer <command>`
+- NPM: `./vendor/bin/sail npm run build`
+
+Use `make shell` when running multiple artisan/composer commands in sequence.

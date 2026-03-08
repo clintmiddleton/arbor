@@ -1,0 +1,41 @@
+<script setup>
+import { reactiveOmit } from '@vueuse/core';
+
+import { StepperIndicator, useForwardProps } from 'reka-ui';
+import { cn } from '@/lib/utils';
+
+const props = defineProps({
+    asChild: { type: Boolean, required: false },
+    as: { type: null, required: false },
+    class: {
+        type: [Boolean, null, String, Object, Array],
+        required: false,
+        skipCheck: true,
+    },
+});
+
+const delegatedProps = reactiveOmit(props, 'class');
+
+const forwarded = useForwardProps(delegatedProps);
+</script>
+
+<template>
+    <StepperIndicator
+        v-slot="slotProps"
+        v-bind="forwarded"
+        :class="
+            cn(
+                'text-muted-foreground/50 inline-flex h-10 w-10 items-center justify-center rounded-full',
+                // Disabled
+                'group-data-[disabled]:text-muted-foreground group-data-[disabled]:opacity-50',
+                // Active
+                'group-data-[state=active]:bg-primary group-data-[state=active]:text-primary-foreground',
+                // Completed
+                'group-data-[state=completed]:bg-accent group-data-[state=completed]:text-accent-foreground',
+                props.class
+            )
+        "
+    >
+        <slot v-bind="slotProps" />
+    </StepperIndicator>
+</template>

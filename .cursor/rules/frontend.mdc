@@ -1,0 +1,39 @@
+---
+description: Frontend conventions for Vue, Tailwind, and shadcn
+globs: resources/js/**/*.vue, resources/css/**/*.css
+alwaysApply: false
+---
+
+# Frontend Conventions
+
+## Vue: Options API
+
+Use **Options API** for all custom Vue components in `resources/js/Pages/` and `resources/js/Components/` (excluding `resources/js/Components/ui/`).
+
+- Use `props`, `data()`, `computed`, `methods` instead of `script setup`
+- For Inertia `useForm`, use a minimal `setup()` that returns the form: `setup() { return { form: useForm({...}) }; }`
+- Do **not** convert shadcn components in `resources/js/Components/ui/` — keep them as shipped from shadcn
+
+## Tailwind v4
+
+- Config lives in CSS: use `@theme` in `resources/css/app.css` for design tokens
+- No `tailwind.config.js` — v4 uses CSS-based configuration
+- Use `@import "tailwindcss"` and `@plugin` for plugins (e.g. `@tailwindcss/forms`)
+- Use `@custom-variant` for custom variants (e.g. dark mode)
+
+## shadcn-vue Components
+
+Prefer shadcn components from `@/Components/ui/` over custom implementations:
+
+- **Buttons**: `Button` with variants (default, ghost, outline, destructive, link)
+- **Forms**: `Input`, `Label`, `Checkbox`, `Select`, etc.
+- **Overlays**: `DropdownMenu`, `Dialog`, `AlertDialog`, `Sheet`
+- **Feedback**: `Alert`, `AlertDescription`, `Toast` (vue-sonner)
+- **Layout**: `Card`, `Tabs`, `Separator`
+
+Import from `@/Components/ui/<component>` (e.g. `@/Components/ui/button`). Use `asChild` when wrapping Inertia `Link` or native elements.
+
+## Linting & Formatting
+
+- **Prettier**: Code formatting. Run `make format` to fix, `make format-check` to verify.
+- Config: `.prettierrc` (includes `prettier-plugin-tailwindcss` for class ordering).
