@@ -1,0 +1,272 @@
+---
+description: General architecture rules and approach
+alwaysApply: true
+---
+
+# Architecture
+
+When generating or suggesting code in this repository, follow these principles.
+
+## Architecture
+
+Prefer a clean, testable Laravel architecture.
+
+Structure logic in layers:
+
+Controller → Request Validation → Service Layer → Models / Persistence
+
+Controllers should remain thin and only handle:
+	•	request validation
+	•	authorization
+	•	delegating to services
+	•	returning responses
+
+Business logic should live in dedicated service classes.
+
+Example:
+
+app/Services/AttendanceService.php
+
+Avoid placing complex business logic in controllers or models.
+
+⸻
+
+## Directory Structure
+
+Follow a RESTful approach with invokable controllers. One controller per action, one form request per write action.
+
+### Backend
+
+**Controllers** — `app/Http/Controllers/<Resource>/`
+
+Use invokable controllers, one per REST action:
+
+| Action | Controller | Route | Purpose |
+|--------|------------|-------|---------|
+| index | `UserIndexController` | GET /users | List resources |
+| create | `UserCreateController` | GET /users/create | Show create form |
+| store | `UserStoreController` | POST /users | Persist new resource |
+| show | `UserShowController` | GET /users/{id} | Show single resource |
+| edit | `UserEditController` | GET /users/{id}/edit | Show edit form |
+| update | `UserUpdateController` | PUT/PATCH /users/{id} | Update resource |
+| destroy | `UserDestroyController` | DELETE /users/{id} | Delete resource |
+
+**Form Requests** — `app/Http/Requests/<Resource>/`
+
+- `UserStoreRequest` — validation for store
+- `UserUpdateRequest` — validation for update
+
+**Services** — `app/Services/`
+
+- `UserService` with methods: `index()`, `storeUser()`, `show()`, `updateUser()`, `destroyUser()`
+- Read actions (create, edit) may use the service for shared data or be handled directly in the controller if trivial
+
+**Example structure for User resource:**
+
+```
+app/
+├── Http/
+│   ├── Controllers/
+│   │   └── User/
+│   │       ├── UserIndexController.php
+│   │       ├── UserCreateController.php
+│   │       ├── UserStoreController.php
+│   │       ├── UserShowController.php
+│   │       ├── UserEditController.php
+│   │       ├── UserUpdateController.php
+│   │       └── UserDestroyController.php
+│   └── Requests/
+│       └── User/
+│           ├── UserStoreRequest.php
+│           └── UserUpdateRequest.php
+├── Services/
+│   └── UserService.php
+└── Models/
+    └── User.php
+```
+
+**Routes** — Map each action to its invokable controller explicitly (e.g. `Route::get('/users', UserIndexController::class)`). `Route::resource()` expects a single controller, so use explicit routes for this structure.
+
+### Frontend
+
+**Pages** — `resources/js/Pages/<Resource>/`
+
+Mirror the REST actions with Vue page components:
+
+| Action | Page | Rendered for |
+|--------|------|--------------|
+| index | `Index.vue` | List view |
+| create | `Create.vue` | Create form |
+| show | `Show.vue` | Single resource view |
+| edit | `Edit.vue` | Edit form |
+
+**Example structure for User resource:**
+
+```
+resources/js/Pages/
+└── User/
+    ├── Index.vue
+    ├── Create.vue
+    ├── Show.vue
+    └── Edit.vue
+```
+
+Use this RESTful structure wherever a resource has CRUD operations. Deviate only when an action is not a standard resource operation (e.g. custom actions like `UserRestoreController`).
+
+⸻
+
+## Validation
+
+Always use Laravel Form Requests for validation.
+
+Naming: `<Resource>StoreRequest` for create, `<Resource>UpdateRequest` for update.
+
+Examples:
+
+- `UserStoreRequest`, `UserUpdateRequest`
+- `AttendanceSessionStoreRequest`, `AttendanceSessionUpdateRequest`
+
+Validation should include:
+	•	type safety
+	•	required fields
+	•	relational integrity where possible
+
+Prefer explicit validation rules over implicit assumptions.
+
+⸻
+
+## Authorization
+
+Use Laravel Policies or Gates where appropriate.
+
+Examples:
+	•	Only a teacher assigned to a classroom can record attendance
+	•	Only authorized users may modify attendance sessions
+
+Never rely solely on frontend restrictions.
+
+⸻
+
+## Database Integrity
+
+Enforce correctness at the database level when possible.
+
+Examples:
+	•	unique(classroom_id, date) for attendance sessions
+	•	foreign keys for relationships
+
+Use transactions for operations that modify multiple records.
+
+Example:
+
+DB::transaction(function () {
+// atomic operations
+});
+
+⸻
+
+## Domain Modeling
+
+Prefer explicit domain models over generic data structures.
+
+Example entities:
+	•	School
+	•	Classroom
+	•	Student
+	•	Teacher
+	•	AttendanceSession
+	•	AttendanceRecord
+
+AttendanceSession represents attendance for a classroom on a specific date.
+
+AttendanceRecord represents a student’s attendance status within that session.
+
+⸻
+
+## Observability
+
+Code should be observable.
+
+Include:
+	•	structured logging
+	•	meaningful log events
+	•	error handling
+
+Example events to log:
+
+attendance.session.created
+attendance.session.failed
+attendance.records.saved
+
+Avoid silent failures.
+
+⸻
+
+## Security
+
+Follow secure defaults.
+
+Include:
+	•	authentication
+	•	authorization
+	•	input validation
+	•	CSRF protection
+	•	rate limiting where appropriate
+
+Never trust client input.
+
+⸻
+
+## Simplicity
+
+Prefer simple, maintainable solutions over complex architecture.
+
+Avoid introducing:
+	•	microservices
+	•	event sourcing
+	•	CQRS
+	•	unnecessary abstraction
+
+A clean Laravel monolith is preferred.
+
+⸻
+
+## Testability
+
+Code should be easily testable.
+
+Prefer:
+	•	dependency injection
+	•	service classes
+	•	pure methods where possible
+
+Where practical, suggest PHPUnit tests such as:
+
+AttendanceSessionTest
+
+Example tests:
+	•	teacher_can_create_attendance_session
+	•	cannot_create_duplicate_session_for_same_class_and_date
+	•	teacher_can_record_student_attendance
+
+⸻
+
+## Performance
+
+Avoid obvious inefficiencies such as:
+	•	N+1 queries
+	•	unnecessary database calls
+	•	repeated queries inside loops
+
+Prefer eager loading where appropriate.
+
+⸻
+
+## Communication
+
+When generating code, assume it will be reviewed in a pull request.
+
+Produce code that is:
+	•	readable
+	•	well structured
+	•	easy for other developers to understand and extend.
