@@ -79,6 +79,8 @@ app/
 │       └── User/
 │           ├── UserStoreRequest.php
 │           └── UserUpdateRequest.php
+├── Policies/
+│   └── UserPolicy.php
 ├── Services/
 │   └── UserService.php
 └── Models/
@@ -270,3 +272,80 @@ Produce code that is:
 	•	readable
 	•	well structured
 	•	easy for other developers to understand and extend.
+
+## Domain Events
+
+Use Laravel events to represent important domain actions.
+
+Examples:
+	•	AttendanceSessionCreated
+	•	AttendanceRecorded
+	•	StudentMarkedAbsent
+
+Events should represent meaningful business events.
+
+Dispatch events from the service layer after successful database operations.
+
+Example:
+
+AttendanceSessionCreated::dispatch($session);
+
+⸻
+
+## Event Listeners
+
+Listeners should handle side effects such as:
+	•	logging
+	•	metrics
+	•	notifications
+	•	integrations
+
+Listeners must not contain core business logic.
+
+Prefer small single-responsibility listeners.
+
+Example listeners:
+
+LogAttendanceSessionCreated
+PublishAttendanceMetrics
+NotifySchoolSystem
+
+## Jobs and Queue Architecture
+
+When generating background processing logic, follow these principles.
+
+When to Use Jobs
+
+Use Laravel Jobs for work that is:
+	•	slow
+	•	external
+	•	non-critical to the request lifecycle
+	•	retryable
+
+Examples include:
+	•	sending notifications
+	•	integrating with external systems
+	•	generating reports
+	•	background processing tasks
+
+Avoid using jobs for very small or synchronous operations such as simple logging or small database updates.
+
+⸻
+
+## Relationship Between Events, Listeners, and Jobs
+
+Follow this hierarchy:
+
+Controller → Service → Domain Event → Listener → Job (if required)
+
+Domain events represent important business actions.
+
+Listeners should respond to events and may dispatch jobs for longer-running work.
+
+Example:
+
+AttendanceRecorded event
+→ SendAbsenceNotifications listener
+→ Dispatch SendParentNotification job
+
+Listeners should remain small and focused.
