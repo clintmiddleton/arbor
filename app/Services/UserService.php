@@ -30,6 +30,7 @@ class UserService
         $user->email = $data['email'];
         $user->password = Hash::make($data['password']);
         $user->is_admin = $data['is_admin'] ?? false;
+        $user->is_teacher = $data['is_teacher'] ?? false;
         $user->save();
 
         return $user;
@@ -56,6 +57,7 @@ class UserService
         }
 
         $user->is_admin = $data['is_admin'] ?? false;
+        $user->is_teacher = $data['is_teacher'] ?? false;
         $user->save();
 
         return $user;

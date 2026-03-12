@@ -35,6 +35,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
                 'can' => [
                     'accessAdmin' => $request->user()?->can('accessAdmin') ?? false,
+                    'accessTeacher' => $request->user()?->can('accessTeacher') ?? false,
                 ],
             ],
         ];

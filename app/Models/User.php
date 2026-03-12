@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'is_teacher',
     ];
 
     /**
@@ -45,6 +46,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_admin' => 'boolean',
+            'is_teacher' => 'boolean',
         ];
+    }
+
+    /**
+     * Get the classrooms the user teaches.
+     */
+    public function classrooms(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Classroom::class, 'teacher_id');
     }
 }

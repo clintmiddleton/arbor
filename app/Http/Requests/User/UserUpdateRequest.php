@@ -30,6 +30,7 @@ class UserUpdateRequest extends FormRequest
             ],
             'password' => ['nullable', 'confirmed', Password::defaults()],
             'is_admin' => ['boolean'],
+            'is_teacher' => ['boolean'],
         ];
     }
 }

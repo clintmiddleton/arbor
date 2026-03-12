@@ -94,10 +94,19 @@ export default {
                                     Role
                                 </dt>
                                 <dd class="mt-1">
-                                    <Badge v-if="user.is_admin" variant="secondary">
-                                        Administrator
-                                    </Badge>
-                                    <span v-else>User</span>
+                                    <div class="flex flex-wrap gap-1">
+                                        <Badge v-if="user.is_admin" variant="secondary">
+                                            Administrator
+                                        </Badge>
+                                        <Badge v-if="user.is_teacher" variant="outline">
+                                            Teacher
+                                        </Badge>
+                                        <span
+                                            v-if="!user.is_admin && !user.is_teacher"
+                                        >
+                                            User
+                                        </span>
+                                    </div>
                                 </dd>
                             </div>
                             <div>

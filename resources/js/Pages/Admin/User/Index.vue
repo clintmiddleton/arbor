@@ -123,13 +123,26 @@ export default {
                                 </TableCell>
                                 <TableCell>{{ user.email }}</TableCell>
                                 <TableCell>
-                                    <Badge
-                                        v-if="user.is_admin"
-                                        variant="secondary"
-                                    >
-                                        Admin
-                                    </Badge>
-                                    <span v-else class="text-muted-foreground text-sm">User</span>
+                                    <div class="flex flex-wrap gap-1">
+                                        <Badge
+                                            v-if="user.is_admin"
+                                            variant="secondary"
+                                        >
+                                            Admin
+                                        </Badge>
+                                        <Badge
+                                            v-if="user.is_teacher"
+                                            variant="outline"
+                                        >
+                                            Teacher
+                                        </Badge>
+                                        <span
+                                            v-if="!user.is_admin && !user.is_teacher"
+                                            class="text-muted-foreground text-sm"
+                                        >
+                                            User
+                                        </span>
+                                    </div>
                                 </TableCell>
                                 <TableCell class="text-right">
                                     <div class="flex justify-end gap-2">

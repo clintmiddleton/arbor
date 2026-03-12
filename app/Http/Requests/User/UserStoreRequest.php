@@ -20,6 +20,7 @@ class UserStoreRequest extends FormRequest
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Password::defaults()],
             'is_admin' => ['boolean'],
+            'is_teacher' => ['boolean'],
         ];
     }
 }

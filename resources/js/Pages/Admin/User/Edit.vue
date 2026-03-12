@@ -33,6 +33,7 @@ export default {
             password: '',
             password_confirmation: '',
             is_admin: props.user.is_admin ?? false,
+            is_teacher: props.user.is_teacher ?? false,
         });
         return { form };
     },
@@ -146,21 +147,32 @@ export default {
                             </Alert>
                         </div>
 
-                        <div class="flex items-center space-x-2">
-                            <Checkbox
-                                id="is_admin"
-                                v-model="form.is_admin"
-                            />
-                            <Label for="is_admin" class="cursor-pointer">
-                                Administrator
-                            </Label>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center space-x-2">
+                                <Checkbox
+                                    id="is_admin"
+                                    v-model="form.is_admin"
+                                />
+                                <Label for="is_admin" class="cursor-pointer">
+                                    Administrator
+                                </Label>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <Checkbox
+                                    id="is_teacher"
+                                    v-model="form.is_teacher"
+                                />
+                                <Label for="is_teacher" class="cursor-pointer">
+                                    Teacher
+                                </Label>
+                            </div>
                         </div>
                         <Alert
-                            v-if="form.errors.is_admin"
+                            v-if="form.errors.is_admin || form.errors.is_teacher"
                             variant="destructive"
                         >
                             <AlertDescription>{{
-                                form.errors.is_admin
+                                form.errors.is_admin || form.errors.is_teacher
                             }}</AlertDescription>
                         </Alert>
 

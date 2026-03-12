@@ -44,6 +44,22 @@ const showingNavigationDropdown = ref(false);
                                     </Link>
                                 </Button>
                                 <Button
+                                    v-if="$page.props.auth.can?.accessTeacher"
+                                    variant="ghost"
+                                    asChild
+                                >
+                                    <Link
+                                        :href="route('teacher.classrooms.index')"
+                                        :class="
+                                            route().current('teacher.*')
+                                                ? 'bg-accent text-accent-foreground'
+                                                : ''
+                                        "
+                                    >
+                                        Attendance
+                                    </Link>
+                                </Button>
+                                <Button
                                     v-if="$page.props.auth.can?.accessAdmin"
                                     variant="ghost"
                                     asChild
@@ -163,6 +179,17 @@ const showingNavigationDropdown = ref(false);
                             "
                         >
                             Dashboard
+                        </Link>
+                        <Link
+                            v-if="$page.props.auth.can?.accessTeacher"
+                            :href="route('teacher.classrooms.index')"
+                            :class="
+                                route().current('teacher.*')
+                                    ? 'border-primary text-primary bg-primary/10 block w-full border-l-4 py-2 ps-3 pe-4 text-start text-base font-medium'
+                                    : 'block w-full border-l-4 border-transparent py-2 ps-3 pe-4 text-start text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800'
+                            "
+                        >
+                            Attendance
                         </Link>
                         <Link
                             v-if="$page.props.auth.can?.accessAdmin"

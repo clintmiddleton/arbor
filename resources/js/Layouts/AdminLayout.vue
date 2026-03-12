@@ -22,6 +22,30 @@ export default {
                 <nav class="flex items-center gap-2">
                     <Button variant="ghost" size="sm" asChild>
                         <Link
+                            :href="route('admin.classrooms.index')"
+                            :class="
+                                route().current('admin.classrooms.*')
+                                    ? 'bg-accent text-accent-foreground'
+                                    : ''
+                            "
+                        >
+                            Classrooms
+                        </Link>
+                    </Button>
+                    <Button variant="ghost" size="sm" asChild>
+                        <Link
+                            :href="route('admin.students.index')"
+                            :class="
+                                route().current('admin.students.*')
+                                    ? 'bg-accent text-accent-foreground'
+                                    : ''
+                            "
+                        >
+                            Students
+                        </Link>
+                    </Button>
+                    <Button variant="ghost" size="sm" asChild>
+                        <Link
                             :href="route('admin.users.index')"
                             :class="
                                 route().current('admin.users.*')
